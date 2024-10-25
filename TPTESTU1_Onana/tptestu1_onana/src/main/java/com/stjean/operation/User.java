@@ -1,5 +1,9 @@
 package com.stjean.operation;
 
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class User {
     private int id;
     private String name;
@@ -75,4 +79,99 @@ public class User {
         this.city = city;
         this.balancePersonnel = balancePersonnel;
     }
+
+    private static final ArrayList<User> users = new ArrayList<>();
+
+    public static void addUser(User user) throws EmailInvalidException {
+        validateEmail(user.getEmail());
+        users.add(user);
+    }
+
+    private static void validateEmail(String email) throws EmailInvalidException {
+        String emailRegex = "^[\\w!#$%&'*+/=?^`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^`{|}~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)+[\\w](?:[\\w-]*[\\w])?$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+
+        if (!matcher.matches()) {
+            throw new EmailInvalidException("Invalid email format.");
+        }
+    }
+
+    public static void deleteUser(int id) throws DeletionInvalidException {
+        int index = findUserIndex(id);
+        if (index == -1) {
+            throw new DeletionInvalidException("User with ID " + id + " not found.");
+        }
+        users.remove(index);
+    }
+
+    private static int findUserIndex(int id) {
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getId() == id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static ArrayList<User> listUsers() {
+
+        return new ArrayList<>(users);
+    }
+
+    public static User displayUser(int id) throws DeletionInvalidException {
+        int index = findUserIndex(id);
+        if (index == -1) {
+            throw new DeletionInvalidException("User with ID " + id + " not found.");
+        }
+        return users.get(index);
+    }
+
+    public static class EmailInvalidException extends Exception {
+        public EmailInvalidException(String message) {
+            super(message);
+        }
+    }
+
+    public static class DeletionInvalidException extends Exception {
+        public DeletionInvalidException(String message) {
+            super(message);
+        }
+    }
+
+    public static double analyseSoldeGeneral() throws NegativeGeneralBalanceException {
+        double totalBalance = 0;
+
+        for (User user : users) {
+            totalBalance += user.getBalancePersonnel();
+        }
+
+        if (totalBalance < 0) {
+            throw new NegativeGeneralBalanceException("Negative general balance detected.");
+        }
+
+        return totalBalance;
+    }
+
+    public static User getRichestUser() {
+        if (users.isEmpty()) {
+            return null;
+        }
+
+        User richestUser = users.get(0);
+        for (int i = 1; i < users.size(); i++) {
+            if (users.get(i).getBalancePersonnel() > richestUser.getBalancePersonnel()) {
+                richestUser = users.get(i);
+            }
+        }
+
+        return richestUser;
+    }
+
+    public static class NegativeGeneralBalanceException extends Exception {
+        public NegativeGeneralBalanceException(String message) {
+            super(message);
+        }
+    }
+
 }
