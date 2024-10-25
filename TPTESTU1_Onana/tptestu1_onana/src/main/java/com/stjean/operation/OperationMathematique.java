@@ -1,5 +1,7 @@
 package com.stjean.operation;
 
+import java.util.Arrays;
+
 public class OperationMathematique {
 
     public static boolean estPositif(int nombre) {
@@ -16,5 +18,24 @@ public class OperationMathematique {
         }
 
         return number * factorial(number - 1);
+    }
+
+    public static int[] sortDescending(int[] list) {
+        Arrays.sort(list);
+        reverseArray(list);
+        return list;
+    }
+
+    private static void reverseArray(int[] list) {
+        int left = 0;
+        int right = list.length - 1;
+
+        while (left < right) {
+            int temp = list[left];
+            list[left] = list[right];
+            list[right] = temp;
+            left++;
+            right--;
+        }
     }
 }
