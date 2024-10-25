@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.stjean.operation.OperationMathematique; // Replace with your package name
+import com.stjean.operation.OperationMathematique;
 
 public class TestOperationMathematique {
 
