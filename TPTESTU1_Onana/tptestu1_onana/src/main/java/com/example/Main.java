@@ -7,5 +7,6 @@ public class Main {
         System.out.println("Hello world!");
         int nombrePositif = 5;
         System.out.println("Est positif(" + nombrePositif + ") : " + OperationMathematique.estPositif(nombrePositif));
+
     }
 }
